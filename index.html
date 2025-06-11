@@ -21,50 +21,32 @@
     <script>
       let map;
       let marker;
-      let currentLocation = [37.7749, -122.4194]; // الموقع الافتراضي عند بداية التحميل
+      let currentLocation = [37.7749, -122.4194];
 
-      // دالة لتهيئة الخريطة
       function initMap() {
-        // إنشاء الخريطة
         map = L.map('map').setView(currentLocation, 13);
-
-        // إضافة طبقة الخرائط من OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-        // إنشاء المؤشر (Marker) في الموقع الافتراضي
         marker = L.marker(currentLocation).addTo(map);
-
-        // تحديث الموقع الحي
         updateLocation();
       }
 
-      // دالة لطلب الموقع من الـ API وتحديث الخريطة
       function updateLocation() {
-        // إرسال طلب GET إلى API الخاص بك للحصول على الموقع
-        fetch("https://thawing-everglades-58778-13d6f7383fe8.herokuapp.com/gps-data") // تحديث مسار الـ API هنا
-          .then(response => response.json()) // تحويل الاستجابة إلى JSON
+        fetch("https://flask-gps-api.onrender.com/gps-data")  
+          .then(response => response.json())
           .then(data => {
-            const { latitude, longitude } = data; // استلام البيانات من الـ API
-
+            const { latitude, longitude } = data;
             if (latitude && longitude) {
-              // إذا تم الحصول على بيانات الموقع الجديدة، نحدث الموقع على الخريطة
               const newLocation = [latitude, longitude];
-
-              // تحديث الموقع الجديد للمؤشر (Marker)
               marker.setLatLng(newLocation);
-
-              // تحديث الموقع على الخريطة
               map.setView(newLocation);
-              currentLocation = newLocation; // حفظ الموقع الحالي
+              currentLocation = newLocation;
             }
           })
           .catch(error => console.log("Error fetching data: ", error));
 
-        // التحديث كل 5 ثواني أو حسب الحاجة
         setTimeout(updateLocation, 5000);
       }
 
-      // عند تحميل الصفحة، نبدأ في تهيئة الخريطة
       initMap();
     </script>
   </body>
