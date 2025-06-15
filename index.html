@@ -31,7 +31,7 @@
       }
 
       function updateLocation() {
-        fetch("http://192.168.1.41:5000/gps-data")  
+        fetch("https://flask-gps-api.onrender.com/gps-data")  
           .then(response => response.json())
           .then(data => {
             const { latitude, longitude } = data;
